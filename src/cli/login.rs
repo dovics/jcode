@@ -689,9 +689,7 @@ fn login_openai_compatible_flow(
         if !api_base_input.is_empty() {
             let normalized = crate::provider_catalog::normalize_api_base(&api_base_input)
                 .ok_or_else(|| {
-                    anyhow::anyhow!(
-                        "Invalid OpenAI-compatible API base. Use https://... or http://localhost..."
-                    )
+                    anyhow::anyhow!("Invalid OpenAI-compatible API base URL.")
                 })?;
             crate::provider_catalog::save_env_value_to_env_file(
                 "JCODE_OPENAI_COMPAT_API_BASE",

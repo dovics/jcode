@@ -1220,31 +1220,8 @@ pub fn normalize_api_base(raw: &str) -> Option<String> {
     Some(trimmed.trim_end_matches('/').to_string())
 }
 
-fn allows_insecure_http_host(host: &str) -> bool {
-    let host = host.trim();
-    let host = host
-        .strip_prefix('[')
-        .and_then(|s| s.strip_suffix(']'))
-        .unwrap_or(host);
-    if host.eq_ignore_ascii_case("localhost") {
-        return true;
-    }
-
-    if let Ok(ip) = host.parse::<std::net::IpAddr>() {
-        return match ip {
-            std::net::IpAddr::V4(v4) => {
-                v4.is_loopback() || v4.is_private() || v4.is_link_local() || v4.is_unspecified()
-            }
-            std::net::IpAddr::V6(v6) => {
-                v6.is_loopback()
-                    || v6.is_unique_local()
-                    || v6.is_unicast_link_local()
-                    || v6.is_unspecified()
-            }
-        };
-    }
-
-    false
+fn allows_insecure_http_host(_host: &str) -> bool {
+    true
 }
 
 fn normalize_provider_input(input: &str) -> Option<String> {
@@ -1295,9 +1272,15 @@ mod tests {
     }
 
     #[test]
-    fn normalize_api_base_rejects_public_http_hosts() {
-        assert_eq!(normalize_api_base("http://example.com/v1"), None);
-        assert_eq!(normalize_api_base("http://8.8.8.8/v1"), None);
+    fn normalize_api_base_accepts_all_http_hosts() {
+        assert_eq!(
+            normalize_api_base("http://example.com/v1").as_deref(),
+            Some("http://example.com/v1")
+        );
+        assert_eq!(
+            normalize_api_base("http://8.8.8.8/v1").as_deref(),
+            Some("http://8.8.8.8/v1")
+        );
     }
 
     #[test]

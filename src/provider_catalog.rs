@@ -40,7 +40,7 @@ pub fn resolve_openai_compatible_profile(
             resolved.api_base = normalized;
         } else {
             eprintln!(
-                "Warning: ignoring invalid JCODE_OPENAI_COMPAT_API_BASE '{}'. Use https://... (or http://localhost).",
+                "Warning: ignoring invalid JCODE_OPENAI_COMPAT_API_BASE '{}'.",
                 base
             );
         }
@@ -345,7 +345,7 @@ pub fn apply_named_provider_profile_env_from_config(
 
     let api_base = normalize_api_base(&profile.base_url).ok_or_else(|| {
         anyhow::anyhow!(
-            "Provider profile '{}' has invalid base_url '{}'. Use https://... or http://localhost.",
+            "Provider profile '{}' has invalid base_url '{}'.",
             profile_name,
             profile.base_url
         )

@@ -96,10 +96,7 @@ pub(crate) fn configure_provider_profile(
     ensure_profile_name_not_reserved(&name)?;
 
     let api_base = normalize_api_base(&options.base_url).ok_or_else(|| {
-        anyhow::anyhow!(
-            "Invalid --base-url '{}'. Use https://... or http://localhost/127.0.0.1/private-LAN for local servers.",
-            options.base_url
-        )
+        anyhow::anyhow!("Invalid --base-url '{}'.", options.base_url)
     })?;
     let model = options.model.trim().to_string();
     if model.is_empty() {
